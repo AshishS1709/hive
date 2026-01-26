@@ -8,12 +8,13 @@ See: https://docs.litellm.ai/docs/providers
 """
 
 import json
-from typing import Any
+from typing import Any, Callable
 
 try:
     import litellm
 except ImportError:
     litellm = None
+import litellm 
 
 from framework.llm.provider import LLMProvider, LLMResponse, Tool, ToolUse
 
@@ -154,7 +155,7 @@ class LiteLLMProvider(LLMProvider):
         messages: list[dict[str, Any]],
         system: str,
         tools: list[Tool],
-        tool_executor: callable,
+        tool_executor: Callable[..., Any],
         max_iterations: int = 10,
     ) -> LLMResponse:
         """Run a tool-use loop until the LLM produces a final response."""

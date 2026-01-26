@@ -14,7 +14,7 @@ import uuid
 from collections import OrderedDict
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Callable, TYPE_CHECKING
+from typing import Any, Any, Callable, Callable, TYPE_CHECKING
 
 from framework.graph.executor import GraphExecutor, ExecutionResult
 from framework.runtime.stream_runtime import StreamRuntime, StreamRuntimeAdapter
@@ -38,7 +38,7 @@ class EntryPointSpec:
     name: str
     entry_node: str  # Node ID to start from
     trigger_type: str  # "webhook", "api", "timer", "event", "manual"
-    trigger_config: dict[str, Any] = field(default_factory=dict)
+    trigger_config: dict[str, Any] = field(default_factory=dict[str, Any])
     isolation_level: str = "shared"  # "isolated" | "shared" | "synchronized"
     priority: int = 0
     max_concurrent: int = 10  # Max concurrent executions for this entry point
@@ -152,6 +152,8 @@ class ExecutionStream:
         self._execution_tasks: dict[str, asyncio.Task] = {}
         self._execution_results: OrderedDict[str, ExecutionResult] = OrderedDict()
         self._execution_result_times: dict[str, float] = {}
+        self._execution_tasks: dict[str, asyncio.Task[Any]] = {}
+        self._execution_results: dict[str, ExecutionResult] = {}
         self._completion_events: dict[str, asyncio.Event] = {}
 
         # Concurrency control
